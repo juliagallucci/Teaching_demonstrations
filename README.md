@@ -1,7 +1,7 @@
 ## Teaching Demonstration Materials
 
-Julia Gallucci, PhD Candidate – Institute of Medical Science, University of Toronto
-Assistant Professor (Teaching Stream), Human-Centred Data Science — Faculty of Information
+Julia Gallucci, PhD Candidate from the Institute of Medical Science, University of Toronto
+Assistant Professor (Teaching Stream), Human-Centred Data Science, Faculty of Information
 
 This repository contains all materials prepared for the teaching demonstrations presented as part of the Assistant Professor (Teaching Stream) on-campus interview at the University of Toronto Faculty of Information (iSchool).
 Each component is designed to illustrate a concept-to-code teaching philosophy, emphasizing clarity, reproducibility, and accessibility in data science education. The materials integrate both theoretical grounding and applied coding examples to align with the iSchool’s Human-Centred Data Science curriculum.
