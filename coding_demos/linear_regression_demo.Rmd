@@ -1,0 +1,166 @@
+---
+title: "linear_regression_demo"
+author: "Julia Gallucci"
+date: "30/10/2025"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Install Packages and Import Dataset
+
+In this notebook, we’ll be working with a data set of real estate transactions in Sacramento, California. This dataset contains several features regarding property details, including location, size, type, and price..
+
+Each row in the dataset represents a listing, with various property details:
+
+- **City:** The city where the property is located.
+- **Zip:** The postal code for the property’s location.
+- **Beds:** The number of bedrooms in the property.
+- **Baths:** The number of bathrooms in the property.
+- **Sqft:** The square footage of the property.
+- **Type:** The type of property (e.g., Residential).
+- **Latitude:** The latitude coordinate of the property.
+- **Longitude:** The longitude coordinate of the property.
+
+The target column is **Price**, which we will try to predict based on the other features in the dataset.
+
+This dataset was obtained from [spatialkey](https://support.spatialkey.com/spatialkey-sample-csv-data/)
+
+Load in our libraries
+```{r}
+#install.packages("ggplot2") uncomment this line if needed
+library(ggplot2)
+```
+
+## Our question: **Can we use the size of a house in the Sacramento, CA area to predict its sale price?**
+
+Load in our dataset
+```{r}
+sacramento = read.csv("sacramento.csv")
+head(sacramento) # View first few rows
+```
+This question guides our initial exploration: and after looking at the data, we can see that the columns in the data that we are interested in are 
+- sq_ft (house size, in livable square feet)
+-  price (house sale price, in US dollars (USD)). 
+
+### Visualizing the Data
+
+Let’s create a scatter plot to visualize the relationship between the predictor variable (**house size**) on the x-axis, and we place the response variable that we want to predict (**sale price**) on the y-axis.
+```{r}
+ggplot(data = sacramento, aes(x = sq_ft, y = price)) + geom_point() # Adding scatter plot
+```
+We can see that in Sacramento, CA, larger houses tend to have higher sale prices. This means we might be able to predict the sale price of a house we haven't sold yet based on its size. 
+
+Now that we’ve visualized at our data, let’s quantify the relationship between house size and sale price.
+
+Here, we’re using the `cor()` function to calculate Pearson’s correlation coefficient between the variables sq_ft and price.
+This gives us a single number that tells us both the strength and direction of the relationship between these two variables.
+```{r}
+# Syntax = cor(data$x, data$y)
+cor(sacramento$sq_ft, sacramento$price)
+```
+When we run this, we get a correlation of 0.73.
+That’s a strong positive correlation, meaning that as house size increases, sale price tends to increase as well, which aligns with what we saw in the plot.
+
+**Note**: It's important to remember that we're not saying a bigger house **causes** a higher price; we're just observing that larger houses generally sell for more, so size can help us estimate the price. 
+
+Since we’ve found a strong positive correlation between house size and price, the next step is to build a model that lets us predict price based on size.
+We can do that using simple linear regression.
+
+### What is simple linear regression?
+Simple linear regression is a method to find the best straight line that shows the relationship between two things. It’s called "linear" because it shows a straight-line relationship between the two things.
+
+The equation for the straight line is:
+
+$$
+\text{House sale price} = b_0 + b_1 \times (\text{house size})
+$$
+
+where:
+
+- $ b_0 $ is the price when the house size is 0 (the intercept).
+- $ b_1 $ is how much the price increases for each unit increase in house size (the slope).
+
+In R, the function `lm()` stands for linear model.
+The syntax follows the form `y ~ x`, which reads as "predict y from x." Here, we’re predicting price from square footage.
+```{r}
+# Syntax = lm(y ~ x, data)
+lin_reg = lm(price ~ sq_ft, data = sacramento)
+```
+
+We can extract the slope of the line as well as the intercept of the line via the `coefficients` component of our model.
+```{r}
+# Fitted model components (e.g. coefficients, residuals) are stored in lin_reg
+lin_reg$coefficients
+```
+Our equation is:
+$$
+\text{House sale price} = 134.6\times (\text{house size}) + 16195.5
+$$
+**So for each additional square foot of house size, the price increases by $135.**
+
+Let's plot this line!
+```{r}
+ggplot(data = sacramento, aes(x = sq_ft, y = price)) +
+geom_point() + # Add scatter plot
+geom_smooth(method = 'lm') # Add the line of best fit
+```
+Once we’ve fit our regression model, we can evaluate how accurate our predictions are on average.
+
+We can measure that using the Root Mean Squared Error, or RMSE. The formula for calculating RMSE is:
+
+$$
+ \text{RMSPE} = \sqrt{\frac{1}{n}\sum\limits_{i=1}^{n}(y_i - \hat{y}_i)^2}
+$$
+
+where:
+- $ y_i $ is the true value of the response variable,
+- $ \hat{y}_i $ is the predicted value from the model,
+- $ n $ is the number of observations.
+
+RMSE measures how much our predictions deviate from the actual values. It gives us an idea of how close our predictions are to the real outcomes. Smaller RMSE values indicate a better fit — meaning our predictions are closer to the actual prices.
+
+```{r}
+# Step 1. Get the residuals
+residuals <- lin_reg$residuals
+# Step 2. Square the residuals
+residuals_squared <- residuals**2  
+# Step 3. Find the average
+avg_residuals_squared <- mean(residuals_squared)
+# Step 4. Take the square root
+RMSE <- sqrt(avg_residuals_squared)
+RMSE
+```
+On average predictions are about $82,000 off from the true sale prices.
+
+Finally, let’s look at R-squared to see  we know how much variation in house price our model explains
+
+We can access it by calling `summary(lin_reg)` — which calculates several derived statistics, including R-squared.
+```{r}
+# Metrics such as R2 are derived statistics that are calculated only when you call summary()
+summary(lin_reg)$r.squared
+```
+Here, R-squared is 0.53, meaning our model explains about 53% of the variation in house prices using size alone.
+
+We can actually verify that value — if we square our correlation coefficient from earlier, we get the same result!
+
+That’s because in simple linear regression, R-squared is literally the square of the correlation between the observed and predicted values.
+```{r}
+(cor(sacramento$sq_ft, sacramento$price))**2
+```
+
+So, what does 0.53 mean in practical terms? It tells us that about half of the differences in house prices can be explained by house size , which is a strong relationship for a single variable!
+
+### Conclusion
+
+In this notebook, we explored how simple linear regression can help us model and predict house prices based on square footage.
+
+We started by visualizing the relationship between house size and price, quantified it using Pearson’s correlation, and then built a linear regression model to estimate how much price tends to increase with each additional square foot.
+
+We evaluated our model using RMSE and R-squared- finding that about half of the variation in home prices can be explained by size alone!
+
+This demonstrates how regression moves us from describing relationships to modeling and predicting them — an essential concept in supervised learning.
+
+I hope this notebook has provided a practical understanding of data regression, model evaluation, and the application of machine learning algorithms like linear regression. Feel free to experiment further with the dataset or the code to enhance your learning!
