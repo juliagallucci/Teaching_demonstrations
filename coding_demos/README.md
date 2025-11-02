@@ -29,7 +29,8 @@ This R Markdown file demonstrates supervised learning through simple linear regr
 It shows how to fit a regression model, interpret coefficients, visualize the line of best fit, and evaluate model performance using R-squared and RMSE.
 
 - Key Steps:
-  - Importing and exploring the dataset
+  - Perform Pearson's correlation
   - Fitting a linear regression model with lm()
   - Visualizing the relationship with ggplot
+  - Check model assumptions
   - Calculating and interpreting R-squared and RMSE
