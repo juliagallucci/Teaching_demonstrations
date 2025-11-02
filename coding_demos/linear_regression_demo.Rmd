@@ -123,7 +123,7 @@ Now, that all of our assumptions are met, we can evaluate how accurate our predi
 We can measure that using the Root Mean Squared Error, or RMSE. The formula for calculating RMSE is:
 
 $$
- \text{RMSPE} = \sqrt{\frac{1}{n}\sum\limits_{i=1}^{n}(y_i - \hat{y}_i)^2}
+ \text{RMSE} = \sqrt{\frac{1}{n}\sum\limits_{i=1}^{n}(y_i - \hat{y}_i)^2}
 $$
 
 where:
@@ -134,14 +134,14 @@ where:
 RMSE measures how much our predictions deviate from the actual values. It gives us an idea of how close our predictions are to the real outcomes. Smaller RMSE values indicate a better fit — meaning our predictions are closer to the actual prices.
 
 ```{r}
-# Step 1. Get the residuals
+# Step 1. Get the residuals (errors)
 residuals <- lin_reg$residuals
-# Step 2. Square the residuals
+# Step 2. Square the residuals 
 residuals_squared <- residuals**2  
-# Step 3. Find the average
-avg_residuals_squared <- mean(residuals_squared)
-# Step 4. Take the square root
-RMSE <- sqrt(avg_residuals_squared)
+# Step 3. Find the mean of the squared residuals (MSE)
+MSE <- mean(residuals_squared)
+# Step 4. Take the square root to get RMSE
+RMSE <- sqrt(MSE)
 RMSE
 ```
 On average predictions are about $82,000 off from the true sale prices.
