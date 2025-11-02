@@ -107,7 +107,18 @@ ggplot(data = sacramento, aes(x = sq_ft, y = price)) +
 geom_point() + # Add scatter plot
 geom_smooth(method = 'lm') # Add the line of best fit
 ```
-Once we’ve fit our regression model, we can evaluate how accurate our predictions are on average.
+Once we’ve fit our regression model, we need to check that our key assumptions are met.
+We can do this easily by plotting diagnostic checks directly from our model object.
+```{r}
+plot(lin_reg,1) #1. Constant variance (Residuals vs Fitted)
+plot(lin_reg,2) #2. Normality of residuals (Normal Q-Q plot)
+```
+
+Interpretation: 
+Plot 1: We want the residuals to be randomly scattered around 0 with no clear curve or funnel shape — this supports constant variance.
+Plot 2: We want the points to fall roughly along the diagonal line — this suggests the residuals are approximately normal.
+
+Now, that all of our assumptions are met, we can evaluate how accurate our predictions are on average.
 
 We can measure that using the Root Mean Squared Error, or RMSE. The formula for calculating RMSE is:
 
