@@ -26,7 +26,7 @@ It walks through the process of data scaling, model fitting, and evaluating clus
 - Course Context: INF1344 – Introduction to Statistics for Data Science
 - Overview:
 This R Markdown file demonstrates supervised learning through simple linear regression, using the Sacramento Real Estate dataset.
-It shows how to fit a regression model, interpret coefficients, visualize the line of best fit, and evaluate model performance using R-squared and RMSE.
+It shows how to fit a regression model, interpret coefficients, visualize the line of best fit, and evaluate model assumptions and performance using R-squared and RMSE.
 
 - Key Steps:
   - Perform Pearson's correlation
